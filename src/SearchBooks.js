@@ -4,19 +4,14 @@ import {Link} from 'react-router-dom'
 
 class SearchBooks extends React.Component {
 
-    state = {
-        query: ''
-    }
-
     updateQuery = (query) => {
-        this.setState({query: query.trim()})
-        this.props.onSearch(this.state.query)
-    }
+        this.props.onSearch(query);
+         console.log(this.props.searchResults)
 
+    }
 
     render() {
         return (
-
           <div className="search-books">
             <div className="search-books-bar">
               <Link className="close-search" to='/'>Close</Link>
@@ -33,7 +28,30 @@ class SearchBooks extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">{this.props.searchResults && this.props.searchResults.length > 0
+                && this.props.searchResults.map(result =>
+                    <li key={result.id}>
+                            <div className="book">
+                                <div className="book-top">
+                                    <div className="book-cover"
+                                    style={{width: 128, height: 192, backgroundImage: 'url(' + result.imageLinks.smallThumbnail + ')'}}></div>
+                                    <div className="book-shelf-changer">
+                                        <select defaultValue='none'
+                                        onChange={(e) => this.props.onUpdate(result, e.target.value)}>
+                                            <option value="none" disabled>Move to...</option>
+                                            <option value="currentlyReading">Currently Reading</option>
+                                            <option value="wantToRead">Want to Read</option>
+                                            <option value="read">Read</option>
+                                            <option value="none">None</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="book-title">{result.title}</div>
+                                <div className="book-authors">{result.authors}</div>
+                            </div>
+                        </li>
+                    )}
+                </ol>
             </div>
           </div>
             )

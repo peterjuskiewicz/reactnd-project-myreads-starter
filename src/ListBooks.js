@@ -11,7 +11,6 @@ class ListBooks extends React.Component {
         let wantToRead = this.props.books.filter((book) => book.shelf === 'wantToRead')
         let currentlyReading = this.props.books.filter((book) => book.shelf === 'currentlyReading')
 
-        console.log(this.props.books)
         return (
             <div className="list-books">
             <div className="list-books-title">
@@ -30,7 +29,8 @@ class ListBooks extends React.Component {
                                     <div className="book-cover"
                                     style={{width: 128, height: 192, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')'}}></div>
                                     <div className="book-shelf-changer">
-                                        <select>
+                                        <select defaultValue={'currentlyReading'}
+                                        onChange={(e) => this.props.onUpdate(book, e.target.value)}>
                                             <option value="none" disabled>Move to...</option>
                                             <option value="currentlyReading">Currently Reading</option>
                                             <option value="wantToRead">Want to Read</option>
@@ -57,7 +57,8 @@ class ListBooks extends React.Component {
                                     <div className="book-cover"
                                     style={{width: 128, height: 192, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')'}}></div>
                                     <div className="book-shelf-changer">
-                                        <select>
+                                        <select defaultValue='wantToRead'
+                                        onChange={(e) => this.props.onUpdate(book, e.target.value)}>
                                             <option value="none" disabled>Move to...</option>
                                             <option value="currentlyReading">Currently Reading</option>
                                             <option value="wantToRead">Want to Read</option>
@@ -84,7 +85,8 @@ class ListBooks extends React.Component {
                                     <div className="book-cover"
                                     style={{width: 128, height: 192, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')'}}></div>
                                     <div className="book-shelf-changer">
-                                        <select>
+                                        <select defaultValue='read'
+                                        onChange={(e) => this.props.onUpdate(book, e.target.value)}>
                                             <option value="none" disabled>Move to...</option>
                                             <option value="currentlyReading">Currently Reading</option>
                                             <option value="wantToRead">Want to Read</option>
