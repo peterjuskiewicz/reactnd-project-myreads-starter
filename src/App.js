@@ -8,7 +8,6 @@ import "./App.css";
 class BooksApp extends React.Component {
   state = {
     books: [],
-    searchBooks: []
   };
 
   componentDidMount() {
@@ -16,15 +15,6 @@ class BooksApp extends React.Component {
       this.setState({ books });
     });
   }
-
-  searchBooks = book => {
-    book.length > 0 &&
-      BooksAPI.search(book).then(searchBooks => {
-        this.setState({ searchBooks: searchBooks
-          .filter((book) => book.shelf && book.shelf == 'none' ||
-            !this.state.books.map((bookObj) => bookObj.id).includes(book.id))});
-      });
-  };
 
   updateBooks(book, shelf) {
     const newBooks = this.state.books.map(
@@ -35,10 +25,16 @@ class BooksApp extends React.Component {
   }
 
   addBooks(book, shelf) {
+    const { books } = this.state;
+    if (books.find(existingBook => existingBook.id === book.id)) {
+      const newBooksState = books.map(existingBook => existingBook.id === book.id ? {...book, shelf } : existingBook);
+      this.setState({books: newBooksState})
+    } else {
+      const newBook = {...book, shelf };
+      this.setState({ books: [ ...books, newBook, ] });
+    }
+
     BooksAPI.update(book, shelf);
-    BooksAPI.getAll().then(books => {
-      this.setState({ books });
-    });
   }
 
   render() {
@@ -59,8 +55,7 @@ class BooksApp extends React.Component {
           path="/search"
           render={({ history }) => (
             <SearchBooks
-              onSearch={this.searchBooks}
-              searchResults={this.state.searchBooks}
+              books={this.state.books}
               onUpdate={(book, shelf) => {
                 this.addBooks(book, shelf);
                 history.push('/');
